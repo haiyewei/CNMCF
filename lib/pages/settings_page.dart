@@ -7,6 +7,8 @@ import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:window_manager/window_manager.dart';
 import '../services/notify/notify.dart'; // 导入 app_notify
+import 'package:launch_at_startup/launch_at_startup.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class SystemSettingsPage extends StatefulWidget {
   const SystemSettingsPage({super.key});
@@ -21,6 +23,8 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
   bool _isLoading = true;
   final TextEditingController _searchController = TextEditingController();
   bool _isColorSectionExpanded = false;
+  late LaunchAtStartup _launchAtStartup;
+  bool _isLaunchAtStartupEnabled = false;
 
   // 检查是否在桌面平台运行
   bool _isDesktop() {
@@ -42,6 +46,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     super.initState();
     _loadColors();
     _searchController.addListener(_searchColors);
+    _initializeLaunchAtStartup();
   }
 
   @override
@@ -97,6 +102,50 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
       debugPrint('加载颜色失败: $e');
       setState(() {
         _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _initializeLaunchAtStartup() async {
+    _launchAtStartup = LaunchAtStartup.instance;
+    await _setupLaunchAtStartup(); // 调用新的设置方法
+    await _loadLaunchAtStartupStatus();
+  }
+
+  Future<void> _setupLaunchAtStartup() async {
+    if (!_isDesktop()) return; // 仅在桌面平台设置
+
+    try {
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      String? packageName;
+      if (Platform.isWindows && packageInfo.packageName.isNotEmpty) {
+        // 根据 launch_at_startup 文档，packageName 仅在应用为 MSIX 打包时才需要。
+        // 为了安全起见，在 Windows 上如果 packageInfo.packageName 可用，则提供它。
+        packageName = packageInfo.packageName;
+      }
+
+      _launchAtStartup.setup(
+        appName: packageInfo.appName,
+        appPath: Platform.resolvedExecutable,
+        packageName: packageName,
+      );
+      debugPrint('Launch at startup setup successful for ${packageInfo.appName}');
+    } catch (e) {
+      debugPrint('Error setting up launch at startup: $e');
+      // 可以选择性地通知用户设置失败
+      NotifyController().showNotify(NotifyData(
+        message: '设置开机自启失败: $e',
+        type: NotifyType.app,
+        time: DateTime.now(),
+      ));
+    }
+  }
+
+  Future<void> _loadLaunchAtStartupStatus() async {
+    final isEnabled = await _launchAtStartup.isEnabled();
+    if (mounted) {
+      setState(() {
+        _isLaunchAtStartupEnabled = isEnabled;
       });
     }
   }
@@ -249,6 +298,36 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                     themeManager.setMinimizeToTray(value);
                   },
                 ),
+                Divider(color: colorScheme.outlineVariant),
+                SwitchListTile(
+                 title: const Text('开机自启'),
+                 subtitle: Text(
+                   '应用在系统启动时自动运行',
+                   style: TextStyle(color: colorScheme.onSurfaceVariant),
+                 ),
+                 value: _isLaunchAtStartupEnabled,
+                 secondary: Icon(
+                   Icons.power_settings_new,
+                   color: colorScheme.primary,
+                 ),
+                 onChanged: (value) async {
+                   if (value) {
+                     await _launchAtStartup.enable();
+                   } else {
+                     await _launchAtStartup.disable();
+                   }
+                   if (mounted) {
+                     setState(() {
+                       _isLaunchAtStartupEnabled = value;
+                     });
+                     NotifyController().showNotify(NotifyData(
+                       message: value ? '已启用开机自启' : '已禁用开机自启',
+                       type: NotifyType.app,
+                       time: DateTime.now(),
+                     ));
+                   }
+                 },
+               ),
                 Divider(color: colorScheme.outlineVariant),
                 ListTile(
                   title: const Text('退出应用'),
