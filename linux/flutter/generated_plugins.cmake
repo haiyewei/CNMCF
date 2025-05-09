@@ -5,7 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   contextual_menu
   dynamic_color
-  screen_retriever
+  screen_retriever_linux
   window_manager
 )
 
