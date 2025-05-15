@@ -122,10 +122,7 @@
 通知服务还集成了日志记录 (`logging` 包)，方便调试和跟踪通知流程。
 
 ![通知服务截图](assets/screenshots/Desktop_screenshot_4.png)
-<<<<<<< Updated upstream
-=======
 
 ## 最新效果图
 
 ![最新效果图](assets/screenshots/屏幕截图-2025-05-15-180611.png)
->>>>>>> Stashed changes
