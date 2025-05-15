@@ -4,6 +4,7 @@ import '../constants/app_info.dart';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import '../services/notify/notify.dart';
+import '../themes/theme_manager.dart'; // 导入 getAdaptiveStadiumBorder
 
 class SideBar extends StatefulWidget {
   final int selectedIndex;
@@ -132,7 +133,7 @@ class _SideBarState extends State<SideBar> {
 
               _buildNavItem(
                 context,
-                index: 4,
+                index: 1,
                 title: '系统设置',
                 icon: Icons.settings,
               ),
@@ -290,23 +291,35 @@ class _SideBarState extends State<SideBar> {
                         Row(
                           // 使用 Row 并排放置时间和类型
                           children: [
-                            Text(
-                              _formatTime(notification.time),
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: colorScheme.onSurfaceVariant,
+                            Flexible(
+                              // Wrap the first Text with Flexible
+                              child: Text(
+                                _formatTime(notification.time),
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
+                                overflow:
+                                    TextOverflow
+                                        .ellipsis, // Add overflow handling
                               ),
                             ),
                             const SizedBox(width: 8), // 添加间距
                             // 添加类型标签
-                            Text(
-                              '(${_getNotifyTypeName(notification.type)})', // 调用辅助方法获取类型名称
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: notifyColor.withAlpha(
-                                  (255 * 0.8).round(),
-                                ), // Use withAlpha
-                                fontWeight: FontWeight.w500,
+                            Flexible(
+                              // Wrap the second Text with Flexible
+                              child: Text(
+                                '(${_getNotifyTypeName(notification.type)})', // 调用辅助方法获取类型名称
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: notifyColor.withAlpha(
+                                    (255 * 0.8).round(),
+                                  ), // Use withAlpha
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                overflow:
+                                    TextOverflow
+                                        .ellipsis, // Add overflow handling
                               ),
                             ),
                           ],
@@ -377,7 +390,8 @@ class _SideBarState extends State<SideBar> {
       elevation: isSelected ? 1 : 0,
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+      shape:
+          getAdaptiveStadiumBorder(), // 使用 getAdaptiveStadiumBorder，移除 context 参数
       color: isSelected ? colorScheme.primaryContainer : Colors.transparent,
       child: InkWell(
         onTap: () => widget.onItemSelected(index),
