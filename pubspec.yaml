@@ -48,6 +48,7 @@ dependencies:
   launch_at_startup: ^0.5.1
   package_info_plus: ^8.3.0
   url_launcher: ^6.3.1
+  chinese_font_library: ^1.2.0
 
 dev_dependencies:
   flutter_test:
@@ -94,35 +95,5 @@ flutter:
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/to/asset-from-package
 
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
-  # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
-
-  # 字体配置
-  fonts:
-    - family: Roboto
-      fonts:
-        - asset: assets/fonts/Roboto-VariableFont_wdth,wght.ttf
-          style: normal
-          weight: 400
-    - family: NotoSansSC
-      fonts:
-        - asset: assets/fonts/NotoSansSC-VariableFont_wght.ttf
-          style: normal
-          weight: 400
