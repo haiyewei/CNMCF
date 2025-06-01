@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io' show Platform;
 import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:chinese_font_library/chinese_font_library.dart';
 
 class ThemeManager extends ChangeNotifier {
   static const String _primaryColorKey = 'primary_color';
@@ -368,84 +369,75 @@ class ThemeManager extends ChangeNotifier {
     // 基于Material 3标准创建文本主题
     final fontFamily = getFontFamily();
 
-    // 使用Material Design 3的字体设置
+    // 使用系统中文字体并为每个样式单独应用
     return TextTheme(
       displayLarge: baseTheme.displayLarge?.copyWith(
         fontFamily: fontFamily,
         fontVariations: const [FontVariation('wght', 400)],
-      ),
+      ).useSystemChineseFont(),
       displayMedium: baseTheme.displayMedium?.copyWith(
         fontFamily: fontFamily,
         fontVariations: const [FontVariation('wght', 400)],
-      ),
+      ).useSystemChineseFont(),
       displaySmall: baseTheme.displaySmall?.copyWith(
         fontFamily: fontFamily,
         fontVariations: const [FontVariation('wght', 400)],
-      ),
+      ).useSystemChineseFont(),
       headlineLarge: baseTheme.headlineLarge?.copyWith(
         fontFamily: fontFamily,
         fontVariations: const [FontVariation('wght', 500)],
-      ),
+      ).useSystemChineseFont(),
       headlineMedium: baseTheme.headlineMedium?.copyWith(
         fontFamily: fontFamily,
         fontVariations: const [FontVariation('wght', 500)],
-      ),
+      ).useSystemChineseFont(),
       headlineSmall: baseTheme.headlineSmall?.copyWith(
         fontFamily: fontFamily,
         fontVariations: const [FontVariation('wght', 500)],
-      ),
+      ).useSystemChineseFont(),
       titleLarge: baseTheme.titleLarge?.copyWith(
         fontFamily: fontFamily,
         fontVariations: const [FontVariation('wght', 500)],
-      ),
+      ).useSystemChineseFont(),
       titleMedium: baseTheme.titleMedium?.copyWith(
         fontFamily: fontFamily,
         fontVariations: const [FontVariation('wght', 500)],
-      ),
+      ).useSystemChineseFont(),
       titleSmall: baseTheme.titleSmall?.copyWith(
         fontFamily: fontFamily,
         fontVariations: const [FontVariation('wght', 500)],
-      ),
+      ).useSystemChineseFont(),
       bodyLarge: baseTheme.bodyLarge?.copyWith(
         fontFamily: fontFamily,
         fontVariations: const [FontVariation('wght', 400)],
-      ),
+      ).useSystemChineseFont(),
       bodyMedium: baseTheme.bodyMedium?.copyWith(
         fontFamily: fontFamily,
         fontVariations: const [FontVariation('wght', 400)],
-      ),
+      ).useSystemChineseFont(),
       bodySmall: baseTheme.bodySmall?.copyWith(
         fontFamily: fontFamily,
         fontVariations: const [FontVariation('wght', 400)],
-      ),
+      ).useSystemChineseFont(),
       labelLarge: baseTheme.labelLarge?.copyWith(
         fontFamily: fontFamily,
         fontVariations: const [FontVariation('wght', 500)],
-      ),
+      ).useSystemChineseFont(),
       labelMedium: baseTheme.labelMedium?.copyWith(
         fontFamily: fontFamily,
         fontVariations: const [FontVariation('wght', 500)],
-      ),
+      ).useSystemChineseFont(),
       labelSmall: baseTheme.labelSmall?.copyWith(
         fontFamily: fontFamily,
         fontVariations: const [FontVariation('wght', 500)],
-      ),
+      ).useSystemChineseFont(),
     );
   }
 
   // 获取ThemeData中的字体设置
   String getFontFamily() {
-    if (kIsWeb) {
-      return 'Roboto'; // Web平台使用默认字体
-    }
-    if (Platform.isWindows || Platform.isAndroid || Platform.isLinux) {
-      // 对于Windows、Android和Linux平台
-      return 'Microsoft YaHei';
-    } else if (Platform.isMacOS || Platform.isIOS) {
-      // 对于macOS和iOS平台
-      return '.SF Pro Text';
-    }
-    return 'Roboto'; // 默认字体
+    // 不再指定具体字体，返回空字符串让系统使用默认字体
+    return '';
   }
 
   // 判断当前是否使用中文
@@ -493,4 +485,12 @@ extension ColorExtension on Color {
   int toARGB32() {
     return toARGB32();
   }
+}
+
+/// 返回一个自适应的体育场边框（胶囊形状）。
+///
+/// `StadiumBorder` 会自动适应其应用的小部件的高度，
+/// 在其两端创建完美的半圆形。
+ShapeBorder getAdaptiveStadiumBorder() {
+  return const StadiumBorder();
 }

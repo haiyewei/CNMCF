@@ -9,6 +9,8 @@ import 'package:window_manager/window_manager.dart';
 import '../services/notify/notify.dart'; // 导入 app_notify
 import 'package:launch_at_startup/launch_at_startup.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../constants/app_info.dart';
 
 class SystemSettingsPage extends StatefulWidget {
   const SystemSettingsPage({super.key});
@@ -79,7 +81,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     try {
       // 加载colors.json文件
       final String jsonString = await rootBundle.loadString(
-        'lib/themes/colors.json',
+        'assets/themes/colors.json',
       );
       final List<dynamic> colorsJson = jsonDecode(jsonString);
 
@@ -157,12 +159,14 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     final isDesktop = _isDesktop();
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 8),
-          _buildSection(
+      padding: const EdgeInsets.all(5),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: double.infinity),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 8),
+            _buildSection(
             title: '外观设置',
             icon: Icons.palette_outlined,
             children: [
@@ -170,13 +174,9 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                 const Center(child: CircularProgressIndicator())
               else
                 _buildColorSelector(themeManager),
-              Divider(color: colorScheme.outlineVariant),
+              // Divider(color: colorScheme.outlineVariant), // Removed
               SwitchListTile(
                 title: const Text('跟随系统主题'),
-                subtitle: Text(
-                  '自动适应系统亮色/暗色主题',
-                  style: TextStyle(color: colorScheme.onSurfaceVariant),
-                ),
                 value: themeManager.followSystem,
                 secondary: Icon(
                   Icons.brightness_auto,
@@ -192,13 +192,9 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                 },
               ),
               if (!themeManager.followSystem) ...[
-                Divider(color: colorScheme.outlineVariant),
+                // Divider(color: colorScheme.outlineVariant), // Removed
                 SwitchListTile(
                   title: const Text('深色模式'),
-                  subtitle: Text(
-                    '切换应用的亮色/暗色外观',
-                    style: TextStyle(color: colorScheme.onSurfaceVariant),
-                  ),
                   value: themeManager.isDarkMode,
                   secondary: Icon(
                     themeManager.isDarkMode
@@ -217,13 +213,9 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                 ),
               ],
               // 添加质感设计3开关（移到条件块外）
-              Divider(color: colorScheme.outlineVariant),
+              // Divider(color: colorScheme.outlineVariant), // Removed
               SwitchListTile(
                 title: const Text('质感设计3'),
-                subtitle: Text(
-                  '使用Material Design 3的颜色自动生成算法',
-                  style: TextStyle(color: colorScheme.onSurfaceVariant),
-                ),
                 value: themeManager.useMaterial3,
                 secondary: Icon(Icons.color_lens, color: colorScheme.primary),
                 onChanged: (value) {
@@ -237,13 +229,9 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
               ),
               // 仅在桌面平台上显示侧边栏固定选项
               if (isDesktop) ...[
-                Divider(color: colorScheme.outlineVariant),
+                // Divider(color: colorScheme.outlineVariant), // Removed
                 SwitchListTile(
                   title: const Text('固定侧边栏'),
-                  subtitle: Text(
-                    '桌面端侧边栏始终显示，不可收起',
-                    style: TextStyle(color: colorScheme.onSurfaceVariant),
-                  ),
                   value: themeManager.fixedSidebar,
                   secondary: Icon(Icons.dock, color: colorScheme.primary),
                   onChanged: (value) {
@@ -256,13 +244,9 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                   },
                 ),
               ],
-              Divider(color: colorScheme.outlineVariant),
+              // Divider(color: colorScheme.outlineVariant), // Removed
               ListTile(
                 title: const Text('重置为默认主题'),
-                subtitle: Text(
-                  '恢复默认蓝色主题',
-                  style: TextStyle(color: colorScheme.onSurfaceVariant),
-                ),
                 leading: Icon(Icons.refresh, color: colorScheme.primary),
                 onTap: () {
                   themeManager.resetToDefault();
@@ -276,6 +260,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
               ),
             ],
           ),
+          const Padding(padding: EdgeInsets.symmetric(horizontal: 16.0), child: Divider()), // Added Divider with Padding
           const SizedBox(height: 16),
           // 仅在桌面平台上添加高级设置部分
           if (isDesktop) ...[
@@ -285,10 +270,6 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
               children: [
                 SwitchListTile(
                   title: const Text('后台存活'),
-                  subtitle: Text(
-                    '关闭窗口时最小化到系统托盘而不是完全退出',
-                    style: TextStyle(color: colorScheme.onSurfaceVariant),
-                  ),
                   value: themeManager.minimizeToTray,
                   secondary: Icon(
                     Icons.offline_pin,
@@ -298,13 +279,9 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                     themeManager.setMinimizeToTray(value);
                   },
                 ),
-                Divider(color: colorScheme.outlineVariant),
+                // Divider(color: colorScheme.outlineVariant), // Removed
                 SwitchListTile(
                  title: const Text('开机自启'),
-                 subtitle: Text(
-                   '应用在系统启动时自动运行',
-                   style: TextStyle(color: colorScheme.onSurfaceVariant),
-                 ),
                  value: _isLaunchAtStartupEnabled,
                  secondary: Icon(
                    Icons.power_settings_new,
@@ -328,13 +305,9 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                    }
                  },
                ),
-                Divider(color: colorScheme.outlineVariant),
+                // Divider(color: colorScheme.outlineVariant), // Removed
                 ListTile(
                   title: const Text('退出应用'),
-                  subtitle: Text(
-                    '立即关闭应用程序并退出',
-                    style: TextStyle(color: colorScheme.onSurfaceVariant),
-                  ),
                   leading: Icon(Icons.exit_to_app, color: colorScheme.error),
                   onTap: () async {
                     // 显示确认对话框
@@ -383,6 +356,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                 ),
               ],
             ),
+            const Padding(padding: EdgeInsets.symmetric(horizontal: 16.0), child: Divider()), // Added Divider with Padding
             const SizedBox(height: 16),
           ],
           _buildSection(
@@ -391,21 +365,39 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
             children: [
               ListTile(
                 title: const Text('版本'),
-                subtitle: Text(
-                  '1.0.0',
-                  style: TextStyle(color: colorScheme.onSurfaceVariant),
-                ),
+                subtitle: const Text(AppInfo.appVersion), // 显示应用版本号
                 leading: Icon(
                   Icons.app_settings_alt,
                   color: colorScheme.primary,
                 ),
               ),
+              ListTile(
+                title: const Text('链接'),
+                leading: Icon(
+                  Icons.link,
+                  color: colorScheme.primary,
+                ),
+                onTap: () async {
+                  final Uri url = Uri.parse(AppInfo.officialLink);
+                  if (await canLaunchUrl(url)) {
+                    await launchUrl(url);
+                  } else {
+                    // 处理无法打开链接的情况
+                    NotifyController().showNotify(NotifyData(
+                      message: '无法打开链接: ${AppInfo.officialLink}',
+                      type: NotifyType.app,
+                      time: DateTime.now(),
+                    ));
+                  }
+                },
+              ),
             ],
           ),
         ],
       ),
-    );
-  }
+    ), // Closing parenthesis for ConstrainedBox
+  ); // Closing parenthesis for SingleChildScrollView
+}
 
   Widget _buildSection({
     required String title,
@@ -415,32 +407,43 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Card(
-      elevation: 2,
+      elevation: 0,
+      color: Colors.transparent,
       shadowColor: colorScheme.shadow.withAlpha((255 * 0.2).round()), // 使用 withAlpha
-      surfaceTintColor: colorScheme.surfaceTint,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(42)),
+      clipBehavior: Clip.antiAlias, // 添加此行以确保裁剪行为和阴影与圆角一致
       child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(icon, color: colorScheme.primary, size: 28),
-                const SizedBox(width: 16),
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                    color: colorScheme.onSurface,
-                  ),
-                ),
-              ],
+        padding: const EdgeInsets.all(16),
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            listTileTheme: ListTileThemeData(
+              shape: getAdaptiveStadiumBorder(), // 使用自适应半圆边框
             ),
-            const SizedBox(height: 24),
-            ...children,
-          ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding( // 为标题行添加内边距
+                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                child: Row(
+                  children: [
+                    Icon(icon, color: colorScheme.primary, size: 28),
+                    const SizedBox(width: 16),
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: colorScheme.onSurface,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8.0), // 减小标题行与下方内容的间距
+              ...children,
+            ],
+          ),
         ),
       ),
     );
@@ -451,12 +454,9 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
 
     // 查找当前选中颜色的名称
     String selectedColorName = '';
-
-    // 判断是否为默认蓝色
     if (themeManager.primaryColor.toARGB32() == Colors.blue.toARGB32()) {
       selectedColorName = '经典蓝';
     } else {
-      // 从颜色列表中查找
       for (var option in _colorOptions) {
         if (option.color.toARGB32() == themeManager.primaryColor.toARGB32()) {
           selectedColorName = option.name;
@@ -468,67 +468,42 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 8.0,
-              ),
-              child: Row(
-                children: [
-                  Text(
-                    '主色调',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16,
-                      color: colorScheme.onSurface,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Container(
-                    width: 24,
-                    height: 24,
-                    decoration: BoxDecoration(
-                      color: themeManager.primaryColor,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: colorScheme.outline, width: 1),
-                      boxShadow: [
-                        BoxShadow(
-                          color: colorScheme.shadow.withAlpha((255 * 0.2).round()), // 使用 withAlpha
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    selectedColorName,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
+        ListTile(
+          // contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0), // 移除自定义内边距以与其他选项对齐
+          leading: Container(
+            width: 24,
+            height: 24,
+            decoration: BoxDecoration(
+              color: themeManager.primaryColor,
+              shape: BoxShape.circle,
+              border: Border.all(color: colorScheme.outline, width: 1),
+              boxShadow: [
+                BoxShadow(
+                  color: colorScheme.shadow.withAlpha((255 * 0.2).round()),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
-            IconButton(
-              icon: Icon(
-                _isColorSectionExpanded ? Icons.expand_less : Icons.expand_more,
-                color: colorScheme.primary,
-              ),
-              onPressed: () {
-                setState(() {
-                  _isColorSectionExpanded = !_isColorSectionExpanded;
-                });
-              },
-            ),
-          ],
+          ),
+          title: Text('主色调: $selectedColorName'),
+          // subtitle: Text(
+          //   selectedColorName,
+          //   style: TextStyle(
+          //     fontSize: 12, // 减小副标题字体大小
+          //     color: colorScheme.onSurfaceVariant,
+          //   ),
+          // ),
+          trailing: Icon(
+            _isColorSectionExpanded ? Icons.expand_less : Icons.expand_more,
+            color: colorScheme.primary,
+          ),
+          onTap: () {
+            setState(() {
+              _isColorSectionExpanded = !_isColorSectionExpanded;
+            });
+          },
         ),
-
         if (_isColorSectionExpanded) ...[
           const SizedBox(height: 8),
           Padding(
@@ -563,7 +538,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                     themeManager.primaryColor.toARGB32() ==
                     colorOption.color.toARGB32();
 
-                return GestureDetector(
+                return InkWell(
                   onTap: () {
                     themeManager.setPrimaryColor(colorOption.color);
                     NotifyController().showNotify(NotifyData(
@@ -573,6 +548,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                     ));
                     // setState(() {}); // ThemeManager should handle rebuild
                   },
+                  customBorder: const CircleBorder(),
                   child: Tooltip(
                     message: colorOption.name,
                     child: Container(
@@ -588,7 +564,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: colorScheme.shadow.withAlpha((255 * 0.2).round()), // 使用 withAlpha
+                            color: colorScheme.shadow.withAlpha((255 * 0.2).round()),
                             blurRadius: 4,
                             offset: const Offset(0, 2),
                           ),

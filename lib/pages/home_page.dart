@@ -32,14 +32,11 @@ class HomePageState extends State<HomePage> {
   // 页面列表
   final List<Widget> _pages = [
     const DashboardPage(),
-    Container(), // Placeholder for '收件箱'
-    Container(), // Placeholder for '发件箱'
-    Container(), // Placeholder for '邮箱设置'
-    const SystemSettingsPage(), // Corrected class name for '系统设置'
+    const SystemSettingsPage(),
   ];
 
   // 页面标题
-  final List<String> _titles = ['仪表盘', '收件箱', '发件箱', '邮箱设置', '系统设置'];
+  final List<String> _titles = ['仪表盘','系统设置'];
 
   @override
   void initState() {

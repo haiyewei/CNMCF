@@ -6,7 +6,8 @@ list(APPEND FLUTTER_PLUGIN_LIST
   betrayal
   contextual_menu
   dynamic_color
-  screen_retriever
+  screen_retriever_windows
+  url_launcher_windows
   window_manager
 )
 
