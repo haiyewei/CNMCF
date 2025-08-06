@@ -131,15 +131,19 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
         appPath: Platform.resolvedExecutable,
         packageName: packageName,
       );
-      debugPrint('Launch at startup setup successful for ${packageInfo.appName}');
+      debugPrint(
+        'Launch at startup setup successful for ${packageInfo.appName}',
+      );
     } catch (e) {
       debugPrint('Error setting up launch at startup: $e');
       // 可以选择性地通知用户设置失败
-      NotifyController().showNotify(NotifyData(
-        message: '设置开机自启失败: $e',
-        type: NotifyType.app,
-        time: DateTime.now(),
-      ));
+      NotifyController().showNotify(
+        NotifyData(
+          message: '设置开机自启失败: $e',
+          type: NotifyType.app,
+          time: DateTime.now(),
+        ),
+      );
     }
   }
 
@@ -167,237 +171,258 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
           children: [
             const SizedBox(height: 8),
             _buildSection(
-            title: '外观设置',
-            icon: Icons.palette_outlined,
-            children: [
-              if (_isLoading)
-                const Center(child: CircularProgressIndicator())
-              else
-                _buildColorSelector(themeManager),
-              // Divider(color: colorScheme.outlineVariant), // Removed
-              SwitchListTile(
-                title: const Text('跟随系统主题'),
-                value: themeManager.followSystem,
-                secondary: Icon(
-                  Icons.brightness_auto,
-                  color: colorScheme.primary,
-                ),
-                onChanged: (value) {
-                  themeManager.setFollowSystem(value);
-                  NotifyController().showNotify(NotifyData(
-                    message: value ? '已启用跟随系统主题' : '已禁用跟随系统主题',
-                    type: NotifyType.app,
-                    time: DateTime.now(),
-                  ));
-                },
-              ),
-              if (!themeManager.followSystem) ...[
-                // Divider(color: colorScheme.outlineVariant), // Removed
-                SwitchListTile(
-                  title: const Text('深色模式'),
-                  value: themeManager.isDarkMode,
-                  secondary: Icon(
-                    themeManager.isDarkMode
-                        ? Icons.dark_mode
-                        : Icons.light_mode,
-                    color: colorScheme.primary,
-                  ),
-                  onChanged: (value) {
-                    themeManager.setDarkMode(value);
-                    NotifyController().showNotify(NotifyData(
-                      message: value ? '已切换到深色模式' : '已切换到亮色模式',
-                      type: NotifyType.app,
-                      time: DateTime.now(),
-                    ));
-                  },
-                ),
-              ],
-              // 添加质感设计3开关（移到条件块外）
-              // Divider(color: colorScheme.outlineVariant), // Removed
-              SwitchListTile(
-                title: const Text('质感设计3'),
-                value: themeManager.useMaterial3,
-                secondary: Icon(Icons.color_lens, color: colorScheme.primary),
-                onChanged: (value) {
-                  themeManager.setUseMaterial3(value);
-                  NotifyController().showNotify(NotifyData(
-                    message: value ? '已启用质感设计3颜色生成' : '已使用原始颜色模式',
-                    type: NotifyType.app,
-                    time: DateTime.now(),
-                  ));
-                },
-              ),
-              // 仅在桌面平台上显示侧边栏固定选项
-              if (isDesktop) ...[
-                // Divider(color: colorScheme.outlineVariant), // Removed
-                SwitchListTile(
-                  title: const Text('固定侧边栏'),
-                  value: themeManager.fixedSidebar,
-                  secondary: Icon(Icons.dock, color: colorScheme.primary),
-                  onChanged: (value) {
-                    themeManager.setFixedSidebar(value);
-                    NotifyController().showNotify(NotifyData(
-                      message: value ? '侧边栏已固定' : '侧边栏已取消固定',
-                      type: NotifyType.app,
-                      time: DateTime.now(),
-                    ));
-                  },
-                ),
-              ],
-              // Divider(color: colorScheme.outlineVariant), // Removed
-              ListTile(
-                title: const Text('重置为默认主题'),
-                leading: Icon(Icons.refresh, color: colorScheme.primary),
-                onTap: () {
-                  themeManager.resetToDefault();
-                  // setState(() {}); // ThemeManager should handle rebuild
-                  NotifyController().showNotify(NotifyData(
-                    message: '已重置为默认主题',
-                    type: NotifyType.app,
-                    time: DateTime.now(),
-                  ));
-                },
-              ),
-            ],
-          ),
-          const Padding(padding: EdgeInsets.symmetric(horizontal: 16.0), child: Divider()), // Added Divider with Padding
-          const SizedBox(height: 16),
-          // 仅在桌面平台上添加高级设置部分
-          if (isDesktop) ...[
-            _buildSection(
-              title: '高级设置',
-              icon: Icons.settings_outlined,
+              title: '外观设置',
+              icon: Icons.palette_outlined,
               children: [
+                if (_isLoading)
+                  const Center(child: CircularProgressIndicator())
+                else
+                  _buildColorSelector(themeManager),
+                // Divider(color: colorScheme.outlineVariant), // Removed
                 SwitchListTile(
-                  title: const Text('后台存活'),
-                  value: themeManager.minimizeToTray,
+                  title: const Text('跟随系统主题'),
+                  value: themeManager.followSystem,
                   secondary: Icon(
-                    Icons.offline_pin,
+                    Icons.brightness_auto,
                     color: colorScheme.primary,
                   ),
                   onChanged: (value) {
-                    themeManager.setMinimizeToTray(value);
-                  },
-                ),
-                // Divider(color: colorScheme.outlineVariant), // Removed
-                SwitchListTile(
-                 title: const Text('开机自启'),
-                 value: _isLaunchAtStartupEnabled,
-                 secondary: Icon(
-                   Icons.power_settings_new,
-                   color: colorScheme.primary,
-                 ),
-                 onChanged: (value) async {
-                   if (value) {
-                     await _launchAtStartup.enable();
-                   } else {
-                     await _launchAtStartup.disable();
-                   }
-                   if (mounted) {
-                     setState(() {
-                       _isLaunchAtStartupEnabled = value;
-                     });
-                     NotifyController().showNotify(NotifyData(
-                       message: value ? '已启用开机自启' : '已禁用开机自启',
-                       type: NotifyType.app,
-                       time: DateTime.now(),
-                     ));
-                   }
-                 },
-               ),
-                // Divider(color: colorScheme.outlineVariant), // Removed
-                ListTile(
-                  title: const Text('退出应用'),
-                  leading: Icon(Icons.exit_to_app, color: colorScheme.error),
-                  onTap: () async {
-                    // 显示确认对话框
-                    final shouldExit = await showDialog<bool>(
-                      context: context,
-                      builder:
-                          (context) => AlertDialog(
-                            title: const Text('确认退出'),
-                            content: const Text('确定要退出应用吗？'),
-                            actions: [
-                              TextButton(
-                                onPressed:
-                                    () => Navigator.of(context).pop(false),
-                                child: const Text('取消'),
-                              ),
-                              FilledButton(
-                                onPressed:
-                                    () => Navigator.of(context).pop(true),
-                                child: Text(
-                                  '退出',
-                                  style: TextStyle(color: colorScheme.onError),
-                                ),
-                              ),
-                            ],
-                          ),
-                    );
-
-                    // 添加 mounted 检查
-                    if (!mounted) return;
-                    if (shouldExit == true) {
-                      NotifyController().showNotify(NotifyData(
-                        message: '正在退出应用程序...',
+                    themeManager.setFollowSystem(value);
+                    NotifyController().showNotify(
+                      NotifyData(
+                        message: value ? '已启用跟随系统主题' : '已禁用跟随系统主题',
                         type: NotifyType.app,
                         time: DateTime.now(),
-                      ));
-                      // 延迟一小段时间后退出应用程序
-                      Future.delayed(
-                        const Duration(milliseconds: 500),
-                        () async {
-                          // 退出应用程序
-                          await windowManager.destroy();
-                        },
+                      ),
+                    );
+                  },
+                ),
+                if (!themeManager.followSystem) ...[
+                  // Divider(color: colorScheme.outlineVariant), // Removed
+                  SwitchListTile(
+                    title: const Text('深色模式'),
+                    value: themeManager.isDarkMode,
+                    secondary: Icon(
+                      themeManager.isDarkMode
+                          ? Icons.dark_mode
+                          : Icons.light_mode,
+                      color: colorScheme.primary,
+                    ),
+                    onChanged: (value) {
+                      themeManager.setDarkMode(value);
+                      NotifyController().showNotify(
+                        NotifyData(
+                          message: value ? '已切换到深色模式' : '已切换到亮色模式',
+                          type: NotifyType.app,
+                          time: DateTime.now(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+                // 添加质感设计3开关（移到条件块外）
+                // Divider(color: colorScheme.outlineVariant), // Removed
+                SwitchListTile(
+                  title: const Text('质感设计3'),
+                  value: themeManager.useMaterial3,
+                  secondary: Icon(Icons.color_lens, color: colorScheme.primary),
+                  onChanged: (value) {
+                    themeManager.setUseMaterial3(value);
+                    NotifyController().showNotify(
+                      NotifyData(
+                        message: value ? '已启用质感设计3颜色生成' : '已使用原始颜色模式',
+                        type: NotifyType.app,
+                        time: DateTime.now(),
+                      ),
+                    );
+                  },
+                ),
+                // 仅在桌面平台上显示侧边栏固定选项
+                if (isDesktop) ...[
+                  // Divider(color: colorScheme.outlineVariant), // Removed
+                  SwitchListTile(
+                    title: const Text('固定侧边栏'),
+                    value: themeManager.fixedSidebar,
+                    secondary: Icon(Icons.dock, color: colorScheme.primary),
+                    onChanged: (value) {
+                      themeManager.setFixedSidebar(value);
+                      NotifyController().showNotify(
+                        NotifyData(
+                          message: value ? '侧边栏已固定' : '侧边栏已取消固定',
+                          type: NotifyType.app,
+                          time: DateTime.now(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+                // Divider(color: colorScheme.outlineVariant), // Removed
+                ListTile(
+                  title: const Text('重置为默认主题'),
+                  leading: Icon(Icons.refresh, color: colorScheme.primary),
+                  onTap: () {
+                    themeManager.resetToDefault();
+                    // setState(() {}); // ThemeManager should handle rebuild
+                    NotifyController().showNotify(
+                      NotifyData(
+                        message: '已重置为默认主题',
+                        type: NotifyType.app,
+                        time: DateTime.now(),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: Divider(),
+            ), // Added Divider with Padding
+            const SizedBox(height: 16),
+            // 仅在桌面平台上添加高级设置部分
+            if (isDesktop) ...[
+              _buildSection(
+                title: '高级设置',
+                icon: Icons.settings_outlined,
+                children: [
+                  SwitchListTile(
+                    title: const Text('后台存活'),
+                    value: themeManager.minimizeToTray,
+                    secondary: Icon(
+                      Icons.offline_pin,
+                      color: colorScheme.primary,
+                    ),
+                    onChanged: (value) {
+                      themeManager.setMinimizeToTray(value);
+                    },
+                  ),
+                  // Divider(color: colorScheme.outlineVariant), // Removed
+                  SwitchListTile(
+                    title: const Text('开机自启'),
+                    value: _isLaunchAtStartupEnabled,
+                    secondary: Icon(
+                      Icons.power_settings_new,
+                      color: colorScheme.primary,
+                    ),
+                    onChanged: (value) async {
+                      if (value) {
+                        await _launchAtStartup.enable();
+                      } else {
+                        await _launchAtStartup.disable();
+                      }
+                      if (mounted) {
+                        setState(() {
+                          _isLaunchAtStartupEnabled = value;
+                        });
+                        NotifyController().showNotify(
+                          NotifyData(
+                            message: value ? '已启用开机自启' : '已禁用开机自启',
+                            type: NotifyType.app,
+                            time: DateTime.now(),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                  // Divider(color: colorScheme.outlineVariant), // Removed
+                  ListTile(
+                    title: const Text('退出应用'),
+                    leading: Icon(Icons.exit_to_app, color: colorScheme.error),
+                    onTap: () async {
+                      // 显示确认对话框
+                      final shouldExit = await showDialog<bool>(
+                        context: context,
+                        builder:
+                            (context) => AlertDialog(
+                              title: const Text('确认退出'),
+                              content: const Text('确定要退出应用吗？'),
+                              actions: [
+                                TextButton(
+                                  onPressed:
+                                      () => Navigator.of(context).pop(false),
+                                  child: const Text('取消'),
+                                ),
+                                FilledButton(
+                                  onPressed:
+                                      () => Navigator.of(context).pop(true),
+                                  child: Text(
+                                    '退出',
+                                    style: TextStyle(
+                                      color: colorScheme.onError,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                      );
+
+                      // 添加 mounted 检查
+                      if (!mounted) return;
+                      if (shouldExit == true) {
+                        NotifyController().showNotify(
+                          NotifyData(
+                            message: '正在退出应用程序...',
+                            type: NotifyType.app,
+                            time: DateTime.now(),
+                          ),
+                        );
+                        // 延迟一小段时间后退出应用程序
+                        Future.delayed(
+                          const Duration(milliseconds: 500),
+                          () async {
+                            // 退出应用程序
+                            await windowManager.destroy();
+                          },
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: Divider(),
+              ), // Added Divider with Padding
+              const SizedBox(height: 16),
+            ],
+            _buildSection(
+              title: '关于',
+              icon: Icons.info_outline,
+              children: [
+                ListTile(
+                  title: const Text('版本'),
+                  subtitle: const Text(AppInfo.appVersion), // 显示应用版本号
+                  leading: Icon(
+                    Icons.app_settings_alt,
+                    color: colorScheme.primary,
+                  ),
+                ),
+                ListTile(
+                  title: const Text('链接'),
+                  leading: Icon(Icons.link, color: colorScheme.primary),
+                  onTap: () async {
+                    final Uri url = Uri.parse(AppInfo.officialLink);
+                    if (await canLaunchUrl(url)) {
+                      await launchUrl(url);
+                    } else {
+                      // 处理无法打开链接的情况
+                      NotifyController().showNotify(
+                        NotifyData(
+                          message: '无法打开链接: ${AppInfo.officialLink}',
+                          type: NotifyType.app,
+                          time: DateTime.now(),
+                        ),
                       );
                     }
                   },
                 ),
               ],
             ),
-            const Padding(padding: EdgeInsets.symmetric(horizontal: 16.0), child: Divider()), // Added Divider with Padding
-            const SizedBox(height: 16),
           ],
-          _buildSection(
-            title: '关于',
-            icon: Icons.info_outline,
-            children: [
-              ListTile(
-                title: const Text('版本'),
-                subtitle: const Text(AppInfo.appVersion), // 显示应用版本号
-                leading: Icon(
-                  Icons.app_settings_alt,
-                  color: colorScheme.primary,
-                ),
-              ),
-              ListTile(
-                title: const Text('链接'),
-                leading: Icon(
-                  Icons.link,
-                  color: colorScheme.primary,
-                ),
-                onTap: () async {
-                  final Uri url = Uri.parse(AppInfo.officialLink);
-                  if (await canLaunchUrl(url)) {
-                    await launchUrl(url);
-                  } else {
-                    // 处理无法打开链接的情况
-                    NotifyController().showNotify(NotifyData(
-                      message: '无法打开链接: ${AppInfo.officialLink}',
-                      type: NotifyType.app,
-                      time: DateTime.now(),
-                    ));
-                  }
-                },
-              ),
-            ],
-          ),
-        ],
-      ),
-    ), // Closing parenthesis for ConstrainedBox
-  ); // Closing parenthesis for SingleChildScrollView
-}
+        ),
+      ), // Closing parenthesis for ConstrainedBox
+    ); // Closing parenthesis for SingleChildScrollView
+  }
 
   Widget _buildSection({
     required String title,
@@ -409,7 +434,9 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     return Card(
       elevation: 0,
       color: Colors.transparent,
-      shadowColor: colorScheme.shadow.withAlpha((255 * 0.2).round()), // 使用 withAlpha
+      shadowColor: colorScheme.shadow.withAlpha(
+        (255 * 0.2).round(),
+      ), // 使用 withAlpha
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(42)),
       clipBehavior: Clip.antiAlias, // 添加此行以确保裁剪行为和阴影与圆角一致
       child: Padding(
@@ -423,7 +450,8 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding( // 为标题行添加内边距
+              Padding(
+                // 为标题行添加内边距
                 padding: const EdgeInsets.symmetric(vertical: 4.0),
                 child: Row(
                   children: [
@@ -541,11 +569,13 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                 return InkWell(
                   onTap: () {
                     themeManager.setPrimaryColor(colorOption.color);
-                    NotifyController().showNotify(NotifyData(
-                      message: '主题颜色已更改为：${colorOption.name}',
-                      type: NotifyType.app,
-                      time: DateTime.now(),
-                    ));
+                    NotifyController().showNotify(
+                      NotifyData(
+                        message: '主题颜色已更改为：${colorOption.name}',
+                        type: NotifyType.app,
+                        time: DateTime.now(),
+                      ),
+                    );
                     // setState(() {}); // ThemeManager should handle rebuild
                   },
                   customBorder: const CircleBorder(),
@@ -564,7 +594,9 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: colorScheme.shadow.withAlpha((255 * 0.2).round()),
+                            color: colorScheme.shadow.withAlpha(
+                              (255 * 0.2).round(),
+                            ),
                             blurRadius: 4,
                             offset: const Offset(0, 2),
                           ),

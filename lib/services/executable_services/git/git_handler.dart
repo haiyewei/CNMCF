@@ -1,4 +1,4 @@
-// TODO: Implement Git handler specific logic 
+// TODO: Implement Git handler specific logic
 
 class GitHandler {
   // TODO: Implement Git related logic, e.g., finding git executable, running commands
@@ -10,4 +10,4 @@ class GitHandler {
   void dispose() {
     // Cleanup logic for GitHandler
   }
-} 
+}

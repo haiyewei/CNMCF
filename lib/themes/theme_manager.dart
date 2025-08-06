@@ -371,66 +371,111 @@ class ThemeManager extends ChangeNotifier {
 
     // 使用系统中文字体并为每个样式单独应用
     return TextTheme(
-      displayLarge: baseTheme.displayLarge?.copyWith(
-        fontFamily: fontFamily,
-        fontVariations: const [FontVariation('wght', 400)],
-      ).useSystemChineseFont(),
-      displayMedium: baseTheme.displayMedium?.copyWith(
-        fontFamily: fontFamily,
-        fontVariations: const [FontVariation('wght', 400)],
-      ).useSystemChineseFont(),
-      displaySmall: baseTheme.displaySmall?.copyWith(
-        fontFamily: fontFamily,
-        fontVariations: const [FontVariation('wght', 400)],
-      ).useSystemChineseFont(),
-      headlineLarge: baseTheme.headlineLarge?.copyWith(
-        fontFamily: fontFamily,
-        fontVariations: const [FontVariation('wght', 500)],
-      ).useSystemChineseFont(),
-      headlineMedium: baseTheme.headlineMedium?.copyWith(
-        fontFamily: fontFamily,
-        fontVariations: const [FontVariation('wght', 500)],
-      ).useSystemChineseFont(),
-      headlineSmall: baseTheme.headlineSmall?.copyWith(
-        fontFamily: fontFamily,
-        fontVariations: const [FontVariation('wght', 500)],
-      ).useSystemChineseFont(),
-      titleLarge: baseTheme.titleLarge?.copyWith(
-        fontFamily: fontFamily,
-        fontVariations: const [FontVariation('wght', 500)],
-      ).useSystemChineseFont(),
-      titleMedium: baseTheme.titleMedium?.copyWith(
-        fontFamily: fontFamily,
-        fontVariations: const [FontVariation('wght', 500)],
-      ).useSystemChineseFont(),
-      titleSmall: baseTheme.titleSmall?.copyWith(
-        fontFamily: fontFamily,
-        fontVariations: const [FontVariation('wght', 500)],
-      ).useSystemChineseFont(),
-      bodyLarge: baseTheme.bodyLarge?.copyWith(
-        fontFamily: fontFamily,
-        fontVariations: const [FontVariation('wght', 400)],
-      ).useSystemChineseFont(),
-      bodyMedium: baseTheme.bodyMedium?.copyWith(
-        fontFamily: fontFamily,
-        fontVariations: const [FontVariation('wght', 400)],
-      ).useSystemChineseFont(),
-      bodySmall: baseTheme.bodySmall?.copyWith(
-        fontFamily: fontFamily,
-        fontVariations: const [FontVariation('wght', 400)],
-      ).useSystemChineseFont(),
-      labelLarge: baseTheme.labelLarge?.copyWith(
-        fontFamily: fontFamily,
-        fontVariations: const [FontVariation('wght', 500)],
-      ).useSystemChineseFont(),
-      labelMedium: baseTheme.labelMedium?.copyWith(
-        fontFamily: fontFamily,
-        fontVariations: const [FontVariation('wght', 500)],
-      ).useSystemChineseFont(),
-      labelSmall: baseTheme.labelSmall?.copyWith(
-        fontFamily: fontFamily,
-        fontVariations: const [FontVariation('wght', 500)],
-      ).useSystemChineseFont(),
+      displayLarge:
+          baseTheme.displayLarge
+              ?.copyWith(
+                fontFamily: fontFamily,
+                fontVariations: const [FontVariation('wght', 400)],
+              )
+              .useSystemChineseFont(),
+      displayMedium:
+          baseTheme.displayMedium
+              ?.copyWith(
+                fontFamily: fontFamily,
+                fontVariations: const [FontVariation('wght', 400)],
+              )
+              .useSystemChineseFont(),
+      displaySmall:
+          baseTheme.displaySmall
+              ?.copyWith(
+                fontFamily: fontFamily,
+                fontVariations: const [FontVariation('wght', 400)],
+              )
+              .useSystemChineseFont(),
+      headlineLarge:
+          baseTheme.headlineLarge
+              ?.copyWith(
+                fontFamily: fontFamily,
+                fontVariations: const [FontVariation('wght', 500)],
+              )
+              .useSystemChineseFont(),
+      headlineMedium:
+          baseTheme.headlineMedium
+              ?.copyWith(
+                fontFamily: fontFamily,
+                fontVariations: const [FontVariation('wght', 500)],
+              )
+              .useSystemChineseFont(),
+      headlineSmall:
+          baseTheme.headlineSmall
+              ?.copyWith(
+                fontFamily: fontFamily,
+                fontVariations: const [FontVariation('wght', 500)],
+              )
+              .useSystemChineseFont(),
+      titleLarge:
+          baseTheme.titleLarge
+              ?.copyWith(
+                fontFamily: fontFamily,
+                fontVariations: const [FontVariation('wght', 500)],
+              )
+              .useSystemChineseFont(),
+      titleMedium:
+          baseTheme.titleMedium
+              ?.copyWith(
+                fontFamily: fontFamily,
+                fontVariations: const [FontVariation('wght', 500)],
+              )
+              .useSystemChineseFont(),
+      titleSmall:
+          baseTheme.titleSmall
+              ?.copyWith(
+                fontFamily: fontFamily,
+                fontVariations: const [FontVariation('wght', 500)],
+              )
+              .useSystemChineseFont(),
+      bodyLarge:
+          baseTheme.bodyLarge
+              ?.copyWith(
+                fontFamily: fontFamily,
+                fontVariations: const [FontVariation('wght', 400)],
+              )
+              .useSystemChineseFont(),
+      bodyMedium:
+          baseTheme.bodyMedium
+              ?.copyWith(
+                fontFamily: fontFamily,
+                fontVariations: const [FontVariation('wght', 400)],
+              )
+              .useSystemChineseFont(),
+      bodySmall:
+          baseTheme.bodySmall
+              ?.copyWith(
+                fontFamily: fontFamily,
+                fontVariations: const [FontVariation('wght', 400)],
+              )
+              .useSystemChineseFont(),
+      labelLarge:
+          baseTheme.labelLarge
+              ?.copyWith(
+                fontFamily: fontFamily,
+                fontVariations: const [FontVariation('wght', 500)],
+              )
+              .useSystemChineseFont(),
+      labelMedium:
+          baseTheme.labelMedium
+              ?.copyWith(
+                fontFamily: fontFamily,
+                fontVariations: const [FontVariation('wght', 500)],
+              )
+              .useSystemChineseFont(),
+      labelSmall:
+          baseTheme.labelSmall
+              ?.copyWith(
+                fontFamily: fontFamily,
+                fontVariations: const [FontVariation('wght', 500)],
+              )
+              .useSystemChineseFont(),
     );
   }
 

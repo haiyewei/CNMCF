@@ -36,7 +36,7 @@ class HomePageState extends State<HomePage> {
   ];
 
   // 页面标题
-  final List<String> _titles = ['仪表盘','系统设置'];
+  final List<String> _titles = ['仪表盘', '系统设置'];
 
   @override
   void initState() {

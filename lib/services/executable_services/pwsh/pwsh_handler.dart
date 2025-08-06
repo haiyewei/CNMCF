@@ -1,4 +1,4 @@
-// TODO: Implement PowerShell handler specific logic 
+// TODO: Implement PowerShell handler specific logic
 
 class PwshHandler {
   // TODO: Implement PowerShell related logic, e.g., finding pwsh executable, running scripts
@@ -10,4 +10,4 @@ class PwshHandler {
   void dispose() {
     // Cleanup logic for PwshHandler
   }
-} 
+}

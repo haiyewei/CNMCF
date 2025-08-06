@@ -28,4 +28,4 @@ class ExecutableService {
   //   // This would require GitHandler to have a method like getCurrentVersion()
   //   // return await git.getCurrentVersion();
   // }
-} 
+}
