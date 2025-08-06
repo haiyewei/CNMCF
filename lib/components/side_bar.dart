@@ -162,9 +162,7 @@ class _SideBarState extends State<SideBar> {
                     ],
                   ),
                 ),
-                Expanded(
-                  child: _buildNotificationList(context),
-                ),
+                Expanded(child: _buildNotificationList(context)),
               ],
             ),
           ),
