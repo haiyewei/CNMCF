@@ -158,7 +158,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final themeManager = Provider.of<ThemeManager>(context);
+    final themeManager = Provider.of<ThemeProvider>(context);
     final colorScheme = Theme.of(context).colorScheme;
     final isDesktop = _isDesktop();
 
@@ -477,16 +477,16 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     );
   }
 
-  Widget _buildColorSelector(ThemeManager themeManager) {
+  Widget _buildColorSelector(ThemeProvider themeManager) {
     final colorScheme = Theme.of(context).colorScheme;
 
     // 查找当前选中颜色的名称
     String selectedColorName = '';
-    if (themeManager.primaryColor.toARGB32() == Colors.blue.toARGB32()) {
+    if (themeManager.primaryColor == Colors.blue) {
       selectedColorName = '经典蓝';
     } else {
       for (var option in _colorOptions) {
-        if (option.color.toARGB32() == themeManager.primaryColor.toARGB32()) {
+        if (option.color == themeManager.primaryColor) {
           selectedColorName = option.name;
           break;
         }
@@ -563,8 +563,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
               itemBuilder: (context, index) {
                 final colorOption = _filteredColorOptions[index];
                 final isSelected =
-                    themeManager.primaryColor.toARGB32() ==
-                    colorOption.color.toARGB32();
+                    themeManager.primaryColor == colorOption.color;
 
                 return InkWell(
                   onTap: () {

@@ -1,6 +1,9 @@
 @echo off
 setlocal enabledelayedexpansion
 
+:: ./for.cmd ./lib
+
+
 :: 初始化退出代码
 set "_exitCode=0"
 set "dart_files="

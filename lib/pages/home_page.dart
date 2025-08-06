@@ -80,7 +80,7 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     // 获取主题管理器
-    final themeManager = Provider.of<ThemeManager>(context);
+    final themeManager = Provider.of<ThemeProvider>(context);
     // 判断是否为桌面平台
     final bool isDesktop = _isDesktop();
     // 获取是否固定侧边栏的设置

@@ -112,66 +112,61 @@ class _SideBarState extends State<SideBar> {
           ),
         ),
         Expanded(
-          child: ListView(
+          child: Padding(
             padding: const EdgeInsets.symmetric(
               vertical: 8.0,
               horizontal: 12.0,
             ),
-            children: [
-              const SizedBox(height: 8),
-              _buildNavItem(
-                context,
-                index: 0,
-                title: '仪表盘',
-                icon: Icons.dashboard,
-              ),
-              const SizedBox(height: 8),
-
-              _buildDivider(context),
-
-              const SizedBox(height: 8),
-
-              _buildNavItem(
-                context,
-                index: 1,
-                title: '系统设置',
-                icon: Icons.settings,
-              ),
-
-              // 在系统设置下方添加分隔符
-              const SizedBox(height: 8),
-              _buildDivider(context),
-
-              // 通知容器标题
-              const SizedBox(height: 8),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 8.0,
+            child: Column(
+              children: [
+                const SizedBox(height: 8),
+                _buildNavItem(
+                  context,
+                  index: 0,
+                  title: '仪表盘',
+                  icon: Icons.dashboard,
                 ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.notifications_none,
-                      size: 18,
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      '通知中心',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
+                const SizedBox(height: 8),
+                _buildDivider(context),
+                const SizedBox(height: 8),
+                _buildNavItem(
+                  context,
+                  index: 1,
+                  title: '系统设置',
+                  icon: Icons.settings,
+                ),
+                const SizedBox(height: 8),
+                _buildDivider(context),
+                const SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 8.0,
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.notifications_none,
+                        size: 18,
                         color: colorScheme.onSurfaceVariant,
-                        fontSize: 14,
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 8),
+                      Text(
+                        '通知中心',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: colorScheme.onSurfaceVariant,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-
-              // 通知列表容器
-              SizedBox(height: 300, child: _buildNotificationList(context)),
-            ],
+                Expanded(
+                  child: _buildNotificationList(context),
+                ),
+              ],
+            ),
           ),
         ),
       ],

@@ -173,5 +173,5 @@ class NotifyController {
 }
 
 // NotifyWidget class and its shortcut methods have been removed.
-// 注意: mail_notify.dart 和 system_notify.dart 文件目前未被直接使用，
-// 但被保留作为未来实现邮件和系统特定通知功能的占位符。
+// 注意: system_notify.dart 文件目前未被直接使用，
+// 但被保留和系统特定通知功能的占位符。

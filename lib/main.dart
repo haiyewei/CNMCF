@@ -4,7 +4,6 @@ import 'package:window_manager/window_manager.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:provider/provider.dart';
 import 'dart:io' show Platform, File;
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'pages/home_page.dart';
 import 'constants/app_info.dart';
 import 'themes/theme_manager.dart';
@@ -27,7 +26,7 @@ void main() async {
   );
 
   // 创建主题管理器
-  final themeManager = ThemeManager();
+  final themeManager = ThemeProvider();
   // 加载设置
   await themeManager.loadSettings();
 
@@ -68,7 +67,7 @@ void main() async {
 
   runApp(
     ChangeNotifierProvider(
-      create: (context) => ThemeManager(),
+      create: (context) => ThemeProvider(),
       child: const CNMCFAPP(),
     ),
   );
@@ -99,12 +98,6 @@ Future<void> _setAppWindowIcon() async {
 }
 
 // 检查是否在桌面平台运行
-bool isDesktop() {
-  if (kIsWeb) {
-    return false; // Web平台不被视为桌面平台
-  }
-  return Platform.isWindows || Platform.isLinux || Platform.isMacOS;
-}
 
 class CNMCFAPP extends StatefulWidget {
   const CNMCFAPP({super.key});
@@ -133,7 +126,7 @@ class _CNMCFAPPState extends State<CNMCFAPP> with WindowListener {
   // 实现WindowListener的onWindowClose方法
   @override
   void onWindowClose() async {
-    final themeManager = Provider.of<ThemeManager>(context, listen: false);
+    final themeManager = Provider.of<ThemeProvider>(context, listen: false);
 
     // 无论设置如何，都直接根据minimizeToTray设置决定行为
     // 避免使用任何对话框，因为在窗口关闭事件中可能导致问题
@@ -149,7 +142,7 @@ class _CNMCFAPPState extends State<CNMCFAPP> with WindowListener {
 
   @override
   Widget build(BuildContext context) {
-    final themeManager = Provider.of<ThemeManager>(context);
+    final themeManager = Provider.of<ThemeProvider>(context);
 
     return DynamicColorBuilder(
       builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
@@ -169,8 +162,8 @@ class _CNMCFAPPState extends State<CNMCFAPP> with WindowListener {
           theme: ThemeData(
             colorScheme: lightColorScheme,
             useMaterial3: true,
-            fontFamily: themeManager.getFontFamily(),
-            textTheme: themeManager.getTextTheme(ThemeData.light().textTheme),
+            fontFamily: getFontFamily(),
+            textTheme: getTextTheme(ThemeData.light().textTheme),
             appBarTheme: const AppBarTheme(
               systemOverlayStyle: SystemUiOverlayStyle(
                 statusBarColor: Colors.transparent,
@@ -183,8 +176,8 @@ class _CNMCFAPPState extends State<CNMCFAPP> with WindowListener {
           darkTheme: ThemeData(
             colorScheme: darkColorScheme,
             useMaterial3: true,
-            fontFamily: themeManager.getFontFamily(),
-            textTheme: themeManager.getTextTheme(ThemeData.dark().textTheme),
+            fontFamily: getFontFamily(),
+            textTheme: getTextTheme(ThemeData.dark().textTheme),
             appBarTheme: const AppBarTheme(
               systemOverlayStyle: SystemUiOverlayStyle(
                 statusBarColor: Colors.transparent,
